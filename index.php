@@ -42,6 +42,7 @@ $messages_count = messages_count($con);
 $pages_count = ceil($messages_count / PER_PAGE);
 $page = (int) $_GET["page"];
 $messages = messages($con, $page, PER_PAGE);
+array_reverse($messages);
 ?>
 
 <?php foreach ($messages as $message): ?>
