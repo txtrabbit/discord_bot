@@ -38,6 +38,9 @@ task('pwd', function () {
     $result = run('pwd');
     writeln("Current dir: $result");
 });
+
+task('php-fpm:reload', 'sudo service php7.2-fpm reload');
+
 task('deploy', [
     'deploy:info',
     'deploy:prepare',
@@ -56,3 +59,4 @@ task('deploy', [
 
 // [Optional] If deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
+before('success', 'php-fpm:reload');
