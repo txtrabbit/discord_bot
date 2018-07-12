@@ -8,13 +8,13 @@ $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
 
 
-$con = mysqli_connect('localhost','discord_server', getenv('root_password'));
+$con = mysqli_connect(getenv('host'),getenv('mysql_user'), getenv('root_password'));
 
 // if (mysqli_connect_errno($con)) {
 //   printf("Connect failed: %s\n", mysqli_connect_error());
 //   exit();
 // }
-mysqli_select_db($con, 'discord_server');
+mysqli_select_db($con, getenv('mysql_db'));
 
 
 $discord = new Discord([

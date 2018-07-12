@@ -2,5 +2,8 @@
     "require": {
         "team-reflex/discord-php": "^4.0",
         "vlucas/phpdotenv": "^2.4"
+    },
+    "require-dev": {
+        "deployer/deployer": "^6.2"
     }
 }
