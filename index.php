@@ -25,7 +25,7 @@ function messages_count($con) {
 function messages($con, $page, $per_page) {
   if($page < 1) $page = 1;
   $offset = ($page - 1) * $per_page;
-  $result = mysqli_query($con, "SELECT * FROM messages LIMIT $offset, $per_page");
+  $result = mysqli_query($con, "SELECT * FROM messages ORDER BY time DESC LIMIT $offset, $per_page");
   $messages = [];
   while ($messages[] = mysqli_fetch_assoc($result));
   array_pop($messages);
@@ -42,7 +42,6 @@ $messages_count = messages_count($con);
 $pages_count = ceil($messages_count / PER_PAGE);
 $page = (int) $_GET["page"];
 $messages = messages($con, $page, PER_PAGE);
-array_reverse($messages);
 ?>
 
 <?php foreach ($messages as $message): ?>
