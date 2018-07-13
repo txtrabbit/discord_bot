@@ -1,0 +1,1 @@
+ALTER TABLE messages MODIFY channel_id BIGINT UNSIGNED;
