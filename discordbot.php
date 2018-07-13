@@ -38,12 +38,12 @@ $discord->on('ready', function ($discord) use ($con) {
     $user = mysqli_real_escape_string($con, $user);
     $channel_id = mysqli_real_escape_string($con, $channel_id);
 
-    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`) VALUES ('$time', '$user', '$text', '$channel_id')";
+    $sql = "INSERT INTO messages (`time`, `nickname`, `message` `channel_id`) VALUES ('$time', '$user', '$text', '$channel_id')";
 
     echo $sql . "\n";
 
 		if (!mysqli_query($con, $sql)) {
-		  echo("Errormessage: %s\n", mysqli_error($con));
+		  echo "Errormessage: " . mysqli_error($con);
     }
 	});
 });
