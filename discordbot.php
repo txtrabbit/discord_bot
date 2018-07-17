@@ -30,6 +30,7 @@ $discord->on('ready', function ($discord) use ($con) {
     $user = $message->author->username;
     $text = $message->content;
 		$channel_id = $message->channel_id;
+		$id = $message->id;
 
 	  echo "$user: $text",PHP_EOL;
 
@@ -38,7 +39,7 @@ $discord->on('ready', function ($discord) use ($con) {
     $user = mysqli_real_escape_string($con, $user);
     $channel_id = mysqli_real_escape_string($con, $channel_id);
 
-    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`) VALUES ('$time', '$user', '$text', '$channel_id')";
+    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`) VALUES ('$time', '$user', '$text', '$channel_id', '$id')";
 
     echo $sql . "\n";
 
@@ -47,5 +48,4 @@ $discord->on('ready', function ($discord) use ($con) {
     }
 	});
 });
-
 $discord->run();
