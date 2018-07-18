@@ -19,13 +19,13 @@ mysqli_select_db($con, getenv('mysql_db'));
 
 
 $discord = new Discord([
-	'token' => getenv('MY_TOKEN'),
+  'token' => getenv('MY_TOKEN'),
 ]);
 
 $discord->on('ready', function ($discord) use ($con) {
-	echo "Bot is ready!", PHP_EOL;
+  echo "Bot is ready!", PHP_EOL;
 
-	// Listen for messages.
+  // Listen for messages.
   $discord->on('message', function ($message, $discord) use ($con) {
     $time = mysqli_real_escape_string($con, $message->timestamp);
     $user = mysqli_real_escape_string($con, $message->author->username);
@@ -42,6 +42,6 @@ $discord->on('ready', function ($discord) use ($con) {
     if (!mysqli_query($con, $sql)) {
       echo "Errormessage: " . mysqli_error($con);
     }
-	});
+  });
 });
 $discord->run();
