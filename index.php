@@ -1,6 +1,8 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
+use JasonGrimes\Paginator;
+
 function connect_to_mysql() {
   $con = mysqli_connect(getenv('host'),getenv('mysql_user'), getenv('root_password'));
 
@@ -42,17 +44,51 @@ $messages_count = messages_count($con);
 $pages_count = ceil($messages_count / PER_PAGE);
 $page = (int) $_GET["page"];
 $messages = messages($con, $page, PER_PAGE);
+
+$totalItems = $messages_count;
+$itemsPerPage = PER_PAGE;
+$currentPage = $page;
+$urlPattern = '?page=(:num)';
+
+$paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
 ?>
 
+<head>
+  <!-- The default, built-in template supports the Twitter Bootstrap pagination styles. -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
 <?php foreach ($messages as $message): ?>
   <p> <?= htmlspecialchars($message["time"]) ?> <?= htmlspecialchars($message["nickname"]) ?>: <?= htmlspecialchars($message["message"]) ?> </p>
 <?php endforeach; ?>
 
-<?php for ($i=1; $i <= $pages_count; $i++):?>
-<a href="index.php?page=<?=$i?>"><?=$i?></a> &nbsp;
-<?php endfor; ?>
+<?php if ($paginator->getNumPages() > 1): ?>
+    <ul class="pagination">
+        <?php if ($paginator->getPrevUrl()): ?>
+            <li><a href="<?php echo $paginator->getPrevUrl(); ?>">&laquo; Previous</a></li>
+        <?php endif; ?>
+
+        <?php foreach ($paginator->getPages() as $page): ?>
+            <?php if ($page['url']): ?>
+                <li <?php echo $page['isCurrent'] ? 'class="active"' : ''; ?>>
+                    <a href="<?php echo $page['url']; ?>"><?php echo $page['num']; ?></a>
+                </li>
+            <?php else: ?>
+                <li class="disabled"><span><?php echo $page['num']; ?></span></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php if ($paginator->getNextUrl()): ?>
+            <li><a href="<?php echo $paginator->getNextUrl(); ?>">Next &raquo;</a></li>
+        <?php endif; ?>
+    </ul>
+<?php endif; ?>
+
+
+
 <br>
 <br>
 Всего сообщений: <?= $messages_count  ?>
 <br>
 Всего страниц: <?= $pages_count ?>
+</body>
