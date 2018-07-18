@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+include __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/..');
+$dotenv->load();
+
+$host = getenv('host');
+$mysql_user = getenv('mysql_user');
+$password = getenv('root_password');
+$mysql_db = getenv('mysql_db');
+$ex = explode(" ", "-u $mysql_user -p$password --host=$host $mysql_db");
+
+pcntl_exec("/usr/bin/mysql", $ex);
