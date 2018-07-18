@@ -10,10 +10,11 @@ $dotenv->load();
 
 $con = mysqli_connect(getenv('host'),getenv('mysql_user'), getenv('root_password'));
 
-// if (mysqli_connect_errno($con)) {
-//   printf("Connect failed: %s\n", mysqli_connect_error());
-//   exit();
-// }
+if (mysqli_connect_errno($con)) {
+  printf("Connect failed: %s\n", mysqli_connect_error());
+  exit();
+}
+
 mysqli_select_db($con, getenv('mysql_db'));
 
 
@@ -26,25 +27,20 @@ $discord->on('ready', function ($discord) use ($con) {
 
 	// Listen for messages.
   $discord->on('message', function ($message, $discord) use ($con) {
-    $time = $message->timestamp;
-    $user = $message->author->username;
-    $text = $message->content;
-		$channel_id = $message->channel_id;
-		$id = $message->id;
+    $time = mysqli_real_escape_string($con, $message->timestamp);
+    $user = mysqli_real_escape_string($con, $message->author->username);
+    $text = mysqli_real_escape_string($con, $message->content);
+    $channel_id = mysqli_real_escape_string($con, $message->channel_id);
+    $id = mysqli_real_escape_string($con, $message->id);
 
-	  echo "$user: $text",PHP_EOL;
-
-    $time = mysqli_real_escape_string($con, $time);
-    $text = mysqli_real_escape_string($con, $text);
-    $user = mysqli_real_escape_string($con, $user);
-    $channel_id = mysqli_real_escape_string($con, $channel_id);
+    echo "$user: $text",PHP_EOL;
 
     $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`) VALUES ('$time', '$user', '$text', '$channel_id', '$id')";
 
     echo $sql . "\n";
 
-		if (!mysqli_query($con, $sql)) {
-		  echo "Errormessage: " . mysqli_error($con);
+    if (!mysqli_query($con, $sql)) {
+      echo "Errormessage: " . mysqli_error($con);
     }
 	});
 });
