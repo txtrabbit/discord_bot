@@ -1,8 +1,14 @@
 {
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/txtrabbit/php-paginator"
+        }
+    ],
     "require": {
         "team-reflex/discord-php": "^4.0",
         "vlucas/phpdotenv": "^2.4",
-        "jasongrimes/paginator": "~1.0"
+        "jasongrimes/paginator": "dev-previos-and-next-buttons"
     },
     "require-dev": {
         "deployer/deployer": "^6.2"

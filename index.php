@@ -54,39 +54,22 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
 ?>
 
 <head>
-  <!-- The default, built-in template supports the Twitter Bootstrap pagination styles. -->
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <title>Chat history</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+  integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
+
 <body>
 <?php foreach ($messages as $message): ?>
   <p> <?= htmlspecialchars($message["time"]) ?> <?= htmlspecialchars($message["nickname"]) ?>: <?= htmlspecialchars($message["message"]) ?> </p>
 <?php endforeach; ?>
 
-<?php if ($paginator->getNumPages() > 1): ?>
-    <ul class="pagination">
-        <?php if ($paginator->getPrevUrl()): ?>
-            <li><a href="<?php echo $paginator->getPrevUrl(); ?>">&laquo; Previous</a></li>
-        <?php endif; ?>
-
-        <?php foreach ($paginator->getPages() as $page): ?>
-            <?php if ($page['url']): ?>
-                <li <?php echo $page['isCurrent'] ? 'class="active"' : ''; ?>>
-                    <a href="<?php echo $page['url']; ?>"><?php echo $page['num']; ?></a>
-                </li>
-            <?php else: ?>
-                <li class="disabled"><span><?php echo $page['num']; ?></span></li>
-            <?php endif; ?>
-        <?php endforeach; ?>
-
-        <?php if ($paginator->getNextUrl()): ?>
-            <li><a href="<?php echo $paginator->getNextUrl(); ?>">Next &raquo;</a></li>
-        <?php endif; ?>
-    </ul>
-<?php endif; ?>
-
-
-
 <br>
+<br>
+<?php echo $paginator?>
 <br>
 Всего сообщений: <?= $messages_count  ?>
 <br>
