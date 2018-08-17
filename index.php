@@ -75,7 +75,7 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
 <body>
 <?php if ($_GET["page"] == 0): ?>
     <?php foreach ($sever_list as $server): ?>
-      <p><a href="http://localhost:8080/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a><p>
+      <p><a href="/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a><p>
     <?php endforeach;?>
 <?php else: ?>
   <?php foreach ($messages as $message): ?>
