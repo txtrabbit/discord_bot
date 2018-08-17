@@ -32,10 +32,10 @@ $discord->on('ready', function ($discord) use ($con) {
     $text = mysqli_real_escape_string($con, $message->content);
     $channel_id = mysqli_real_escape_string($con, $message->channel_id);
     $id = mysqli_real_escape_string($con, $message->id);
-
+    $server_id = mysqli_real_escape_string($con, $message->author->guild_id);
     echo "$user: $text",PHP_EOL;
 
-    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`) VALUES ('$time', '$user', '$text', '$channel_id', '$id')";
+    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`, `server_id`) VALUES ('$time', '$user', '$text', '$channel_id', '$id', `$server_id`)";
 
     echo $sql . "\n";
 

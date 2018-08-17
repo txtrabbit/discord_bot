@@ -17,21 +17,29 @@ function connect_to_mysql() {
   return $con;
 }
 
-function messages_count($con) {
-  $messages_count = "select count(*) from messages";
+function messages_count($con, $server_id) {
+  $messages_count = "SELECT count(*) from  messages WHERE server_id = $server_id";
   $result = mysqli_query($con, $messages_count);
   $row = mysqli_fetch_row($result);
   return (int) $row[0];
 }
 
-function messages($con, $page, $per_page) {
+function messages($con, $page, $per_page, $server_id) {
   if($page < 1) $page = 1;
   $offset = ($page - 1) * $per_page;
-  $result = mysqli_query($con, "SELECT * FROM messages ORDER BY time DESC LIMIT $offset, $per_page");
+  $result = mysqli_query($con, "SELECT * FROM messages WHERE server_id = $server_id ORDER BY time DESC LIMIT $offset, $per_page");
   $messages = [];
   while ($messages[] = mysqli_fetch_assoc($result));
   array_pop($messages);
   return $messages;
+}
+
+function server_list($con) {
+  $result = mysqli_query($con, "SELECT DISTINCT server_id FROM messages");
+  $sever_list = [];
+  while ($sever_list[] = mysqli_fetch_assoc($result));
+  array_pop($sever_list);
+  return $sever_list;
 }
 
 define("PER_PAGE", 10);
@@ -39,16 +47,18 @@ define("PER_PAGE", 10);
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
 
-$con = connect_to_mysql();
-$messages_count = messages_count($con);
-$pages_count = ceil($messages_count / PER_PAGE);
+$server_id = (int) $_GET["server_id"];
 $page = (int) $_GET["page"];
-$messages = messages($con, $page, PER_PAGE);
+$con = connect_to_mysql();
+$messages_count = messages_count($con, $server_id);
+$pages_count = ceil($messages_count / PER_PAGE);
+$messages = messages($con, $page, PER_PAGE, $server_id);
+$sever_list = server_list($con);
 
 $totalItems = $messages_count;
 $itemsPerPage = PER_PAGE;
 $currentPage = $page;
-$urlPattern = '?page=(:num)';
+$urlPattern = "?server_id=$server_id&page=(:num)";
 
 $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
 ?>
@@ -63,15 +73,21 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
 </head>
 
 <body>
-<?php foreach ($messages as $message): ?>
-  <p> <?= htmlspecialchars($message["time"]) ?> <?= htmlspecialchars($message["nickname"]) ?>: <?= htmlspecialchars($message["message"]) ?> </p>
-<?php endforeach; ?>
+<?php if ($_GET["page"] == 0): ?>
+    <?php foreach ($sever_list as $server): ?>
+      <p><a href="http://localhost:8080/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a><p>
+    <?php endforeach;?>
+<?php else: ?>
+  <?php foreach ($messages as $message): ?>
+    <p> <?= htmlspecialchars($message["time"]) ?> <?= htmlspecialchars($message["nickname"]) ?>: <?= htmlspecialchars($message["message"]) ?> </p>
+  <?php endforeach;?>
 
-<br>
-<br>
-<?php echo $paginator?>
-<br>
-Всего сообщений: <?= $messages_count  ?>
-<br>
-Всего страниц: <?= $pages_count ?>
+  <br>
+  <br>
+  <?php echo $paginator?>
+  <br>
+  Всего сообщений: <?= $messages_count  ?>
+  <br>
+  Всего страниц: <?= $pages_count ?>
+<?php endif ?>
 </body>
