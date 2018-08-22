@@ -50,10 +50,13 @@ $dotenv->load();
 $server_id = (int) $_GET["server_id"];
 $page = (int) $_GET["page"];
 $con = connect_to_mysql();
+
+$sever_list = server_list($con);
+if ($server_id == 0) $server_id = (int) $sever_list[0]["server_id"];
+
 $messages_count = messages_count($con, $server_id);
 $pages_count = ceil($messages_count / PER_PAGE);
 $messages = messages($con, $page, PER_PAGE, $server_id);
-$sever_list = server_list($con);
 
 $totalItems = $messages_count;
 $itemsPerPage = PER_PAGE;
@@ -73,11 +76,12 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
 </head>
 
 <body>
-<?php if ($_GET["page"] == 0): ?>
+  <nav class="nav nav-tabs">
     <?php foreach ($sever_list as $server): ?>
-      <p><a href="/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a><p>
+      <a class="nav-item nav-link <?php if ($server_id == $server["server_id"]):?>active<?php endif?>" href="/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a>
     <?php endforeach;?>
-<?php else: ?>
+  </nav>
+
   <?php foreach ($messages as $message): ?>
     <p> <?= htmlspecialchars($message["time"]) ?> <?= htmlspecialchars($message["nickname"]) ?>: <?= htmlspecialchars($message["message"]) ?> </p>
   <?php endforeach;?>
@@ -89,5 +93,5 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
   Всего сообщений: <?= $messages_count  ?>
   <br>
   Всего страниц: <?= $pages_count ?>
-<?php endif ?>
+
 </body>
