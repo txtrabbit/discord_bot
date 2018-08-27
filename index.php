@@ -35,7 +35,7 @@ function messages($con, $page, $per_page, $server_id) {
 }
 
 function server_list($con) {
-  $result = mysqli_query($con, "SELECT DISTINCT server_id FROM messages");
+  $result = mysqli_query($con, "SELECT DISTINCT server_id, server_name FROM messages");
   $sever_list = [];
   while ($sever_list[] = mysqli_fetch_assoc($result));
   array_pop($sever_list);
@@ -78,7 +78,7 @@ $paginator = new Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern
 <body>
   <nav class="nav nav-tabs">
     <?php foreach ($sever_list as $server): ?>
-      <a class="nav-item nav-link <?php if ($server_id == $server["server_id"]):?>active<?php endif?>" href="/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_id"])?><a>
+      <a class="nav-item nav-link <?php if ($server_id == $server["server_id"]):?>active<?php endif?>" href="/<?= "?server_id={$server[server_id]}&"?>page=1"> <?= htmlspecialchars($server["server_name"])?><a>
     <?php endforeach;?>
   </nav>
 

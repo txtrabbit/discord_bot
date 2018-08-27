@@ -25,7 +25,6 @@ $discord = new Discord([
 $discord->on('ready', function ($discord) use ($con) {
   echo "Bot is ready!", PHP_EOL;
 
-  // Listen for messages.
   $discord->on('message', function ($message, $discord) use ($con) {
     $time = mysqli_real_escape_string($con, $message->timestamp);
     $user = mysqli_real_escape_string($con, $message->author->username);
@@ -33,9 +32,10 @@ $discord->on('ready', function ($discord) use ($con) {
     $channel_id = mysqli_real_escape_string($con, $message->channel_id);
     $id = mysqli_real_escape_string($con, $message->id);
     $server_id = mysqli_real_escape_string($con, $message->author->guild_id);
+    $server_name = mysqli_real_escape_string($con, $discord->guilds[$server_id]["name"]);
     echo "$user: $text",PHP_EOL;
 
-    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`, `server_id`) VALUES ('$time', '$user', '$text', '$channel_id', '$id', '$server_id')";
+    $sql = "INSERT INTO messages (`time`, `nickname`, `message`, `channel_id`, `id`, `server_id`, `server_name`) VALUES ('$time', '$user', '$text', '$channel_id', '$id', '$server_id', '$server_name')";
 
     echo $sql . "\n";
 
