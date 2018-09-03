@@ -41,6 +41,8 @@ $discord->on('ready', function ($discord) use ($con) {
 
     if (!mysqli_query($con, $sql)) {
       echo "Errormessage: " . mysqli_error($con);
+      mysqli_connect(getenv('host'),getenv('mysql_user'), getenv('root_password'));
+      mysqli_query($con, $sql);
     }
   });
 });
