@@ -10,7 +10,7 @@
 <body>
   <nav class="nav nav-tabs">
     <?php foreach ($sever_list as $server): ?>
-      <a class="nav-item nav-link <?php if ($server_id == $server["server_id"]):?>active<?php endif?>" href="/<?= "{$server[server_id]}"?>/1"> <?= htmlspecialchars($server["server_name"])?><a>
+      <a class="nav-item nav-link <?php if ($server_id == $server["server_id"]):?>active<?php endif?>" href="/<?= "{$server["server_id"]}"?>/1"> <?= htmlspecialchars($server["server_name"])?><a>
     <?php endforeach;?>
   </nav>
 
